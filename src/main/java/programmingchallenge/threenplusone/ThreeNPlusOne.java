@@ -14,12 +14,13 @@ import java.util.StringTokenizer;
  *
  */
 public class ThreeNPlusOne {
+	private static final int MAXIMUM_NUMBER = 1000000;
+	private static final int[] CACHE = new int[MAXIMUM_NUMBER];
 
 	static String ReadLn(int maxLg) // utility function to read from stdin
 	{
 		byte lin[] = new byte[maxLg];
 		int lg = 0, car = -1;
-		String line = "";
 
 		try {
 			while (lg < maxLg) {
@@ -92,6 +93,38 @@ public class ThreeNPlusOne {
 				cycleLength += 2;
 			}
 
+		}
+		return cycleLength;
+	}
+	
+	long nextNumber(long n) {
+		if (n % 2 == 0) {
+			n >>= 1;
+		} else {
+			n *= 3;
+			n++;
+		}
+		return n;
+	}
+	
+	int getCycleLength(long n) {
+		if (n == 1) {
+			return 1;
+		}
+
+		// Find the cycle length of n in cache
+		if (n < MAXIMUM_NUMBER) {
+			int cacheValue = CACHE[(int) n];
+			if (cacheValue != 0) {
+				return cacheValue;
+			}
+		}
+
+		// If not found in cache, calculates it.
+		// Each pass is counted as one cycle length.
+		int cycleLength = 1 + getCycleLength(nextNumber(n));
+		if (n < MAXIMUM_NUMBER) {
+			CACHE[(int) n] = cycleLength;
 		}
 		return cycleLength;
 	}
